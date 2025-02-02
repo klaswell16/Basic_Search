@@ -8,13 +8,13 @@ import search_problems.TilePuzzle;
 import java.util.Comparator;
 import java.util.List;
 
-public class STP_GBFS extends BaseSearch<List<Integer>, String> {
-    public STP_GBFS() {
+public class STP_AStar extends BaseSearch<List<Integer>, String> {
+    public STP_AStar() {
         super(new TilePuzzle(), new SortedQueue<>(new STPCompareEstimates(new TilePuzzle())));
     }
 
     public static void main(String[] args) {
-        STP_GBFS t = new STP_GBFS();
+        STP_AStar t = new STP_AStar();
         t.search();
     }
 
@@ -28,31 +28,38 @@ public class STP_GBFS extends BaseSearch<List<Integer>, String> {
 
         @Override
         public int compare(Node<List<Integer>, String> o1, Node<List<Integer>, String> o2) {
-            double h1 = calculateHeuristic(o1.getState());
-            double h2 = calculateHeuristic(o2.getState());
-            return Double.compare(h1, h2);
+            double f1 = calculateTotalCost(o1);
+            double f2 = calculateTotalCost(o2);
+            return Double.compare(f1, f2);
+        }
+
+
+        private double calculateTotalCost(Node<List<Integer>, String> node) {
+            double g = node.getPathCost();
+            double h = calculateHeuristic(node.getState());
+            return g + h;
         }
 
 
         private double calculateHeuristic(List<Integer> state) {
             int misplacedTiles = 0;
-            int sumManhattanDistance = 0;
+            int sumDistance = 0;
             List<Integer> goalState = problem.goalState();
 
             for (int i = 0; i < state.size(); i++) {
                 int tile = state.get(i);
                 if (tile != 0 && tile != goalState.get(i)) {
                     misplacedTiles++;
-                    sumManhattanDistance += calculateManhattanDistance(state, i, goalState);
+                    sumDistance += calculateDistance(state, i, goalState);
                 }
             }
 
-            return misplacedTiles + sumManhattanDistance;
+            return misplacedTiles + sumDistance;
         }
 
 
-        private int calculateManhattanDistance(List<Integer> state, int index, List<Integer> goalState) {
-            int size = (int) Math.sqrt(state.size()); // Assuming the puzzle is square
+        private int calculateDistance(List<Integer> state, int index, List<Integer> goalState) {
+            int size = (int) Math.sqrt(state.size());
             int currentRow = index / size;
             int currentCol = index % size;
             int goalIndex = goalState.indexOf(state.get(index));
