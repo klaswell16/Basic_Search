@@ -26,7 +26,7 @@ public class STP_AStar extends BaseSearch<List<Integer>, String> {
             this.problem = problem;
         }
 
-        @Override
+
         public int compare(Node<List<Integer>, String> o1, Node<List<Integer>, String> o2) {
             double f1 = calculateTotalCost(o1);
             double f2 = calculateTotalCost(o2);

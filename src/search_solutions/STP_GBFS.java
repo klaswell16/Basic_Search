@@ -52,7 +52,7 @@ public class STP_GBFS extends BaseSearch<List<Integer>, String> {
 
 
         private int calculateManhattanDistance(List<Integer> state, int index, List<Integer> goalState) {
-            int size = (int) Math.sqrt(state.size()); // Assuming the puzzle is square
+            int size = (int) Math.sqrt(state.size());
             int currentRow = index / size;
             int currentCol = index % size;
             int goalIndex = goalState.indexOf(state.get(index));
